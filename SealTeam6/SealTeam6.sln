@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealTeam6.WinForms", "SealTeam6\SealTeam6.WinForms.csproj", "{A2616746-23AF-4C6F-B92C-1D33C6B2F278}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealTeam6.Core", "SealTeam6.Core\SealTeam6.Core.csproj", "{59C45EA7-2402-4D37-97F1-37DEC7ADC784}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealTeam6.Tests", "SealTeam6.Tests\SealTeam6.Tests.csproj", "{ED6E947C-74E6-4C10-9314-034F8669448A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A2616746-23AF-4C6F-B92C-1D33C6B2F278}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2616746-23AF-4C6F-B92C-1D33C6B2F278}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2616746-23AF-4C6F-B92C-1D33C6B2F278}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2616746-23AF-4C6F-B92C-1D33C6B2F278}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59C45EA7-2402-4D37-97F1-37DEC7ADC784}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59C45EA7-2402-4D37-97F1-37DEC7ADC784}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59C45EA7-2402-4D37-97F1-37DEC7ADC784}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59C45EA7-2402-4D37-97F1-37DEC7ADC784}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED6E947C-74E6-4C10-9314-034F8669448A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED6E947C-74E6-4C10-9314-034F8669448A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED6E947C-74E6-4C10-9314-034F8669448A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED6E947C-74E6-4C10-9314-034F8669448A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
