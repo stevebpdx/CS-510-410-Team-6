@@ -5,6 +5,7 @@ using Eto.Forms;
 using Eto.Drawing;
 using Eto.Serialization.Json;
 using Eto;
+using System.Threading;
 
 namespace SealTeam6.EtoGUI
 {
@@ -12,7 +13,7 @@ namespace SealTeam6.EtoGUI
     {
         protected ListBox _view;
         protected ObservableCollection<object> _data;
-        protected void Initialize()
+        protected virtual void Initialize()
         {
             _view = new ListBox();
             _data = new ObservableCollection<object>();
@@ -33,12 +34,12 @@ namespace SealTeam6.EtoGUI
             }
         }
 
-        protected void AddToList(FileListItem datum)
+        protected virtual void AddToList(FileListItem datum)
         {
             _data.Add(datum);
         }
 
-        protected void ClearList()
+        protected virtual void ClearList()
         {
             _data.Clear();
         }

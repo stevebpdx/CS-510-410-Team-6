@@ -9,7 +9,8 @@ namespace SealTeam6.EtoGUI.Desktop
         [STAThread]
         public static void Main(string[] args)
         {
-            new Application(Platform.Detect).Run(new MainForm());
+            var app = new Application(Platform.Detect);
+            app.Run(new MainForm(app.Invoke));
         }
     }
 }
