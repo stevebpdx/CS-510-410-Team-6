@@ -12,7 +12,6 @@ namespace SealTeam6.EtoGUI
     /// <summary>
     /// A key value pair that can be kept in a list view. 
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     public struct FileListItem: IListItem, IImageListItem
     {
         private string _key;
@@ -24,7 +23,8 @@ namespace SealTeam6.EtoGUI
         private Image _image;
 
         /// <summary>
-        /// The name that will be displayed in the GUI for this item. Setting this value.
+        /// The name that will be displayed in the GUI for this item. 
+        /// Setting this value sets up a job to rename this file..
         /// </summary>
         public string Text
         {
