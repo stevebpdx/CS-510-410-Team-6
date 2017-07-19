@@ -38,7 +38,7 @@ namespace SealTeam6.Core
                 key = Console.ReadKey(true).KeyChar;
             }
             Console.Write("\n");
-            Console.Write(password);
+
             Console.ReadLine();
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://" + host + "/");
             request.Method = WebRequestMethods.Ftp.ListDirectory;
