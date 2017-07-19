@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -15,6 +15,11 @@ namespace SealTeam6.Core
             Console.Write("Host: ");
             String host = Console.ReadLine();
             Regex regex = new Regex("\\A([a-zA-Z0-9]|\\.){11,}\\z");
+            if (host == null)
+            {
+                Console.Write("Error: Host Null");
+                return;
+            }
             while (!regex.IsMatch(host))
             {
                 Console.Write("Invalid host. (Valid characters: letters, numbers and periods)\n");
@@ -26,7 +31,7 @@ namespace SealTeam6.Core
             Console.Write("Password: ");
             String password = "";
             char key = Console.ReadKey(true).KeyChar;
-            while (key != (char)ConsoleKey.Enter)
+            while (key != (char)System.Environment.NewLine.ToCharArray()[0])
             {
                 password += key;
                 Console.Write("*");
