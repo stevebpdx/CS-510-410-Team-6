@@ -11,8 +11,8 @@ namespace SealTeam6.Core
 {
     public class Class1
     {
-        private NetworkCredential credentials;
-        private String host;
+        //private NetworkCredential credentials;
+        //private String host;
 
 
     }

@@ -64,46 +64,21 @@ namespace SealTeam6.Console
             return credentials;
         }
 
-        public static string ListRemote(String directory, bool verbose, NetworkCredential credentials,
-            string host)
-        {
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://" + host + directory);
-            if (verbose)
-            {
-                request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
-            }
-            else
-            {
-                request.Method = WebRequestMethods.Ftp.ListDirectory;
-            }
-            request.Credentials = credentials;
-            var output = new StringBuilder();
-            try
-            {
-                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-                Stream stream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(stream);
-                if (verbose)
-                {
-                    output.AppendLine("Date      Time          <DIR> or Bytes Name");
-                }
-                output.AppendLine(reader.ReadToEnd());
-                reader.Close();
-                response.Close();
-            }
-            catch (WebException e)
-            {
-                output.AppendLine(e.Message);
-            }
-            return output.ToString();
-        }
-
         static void Main(string[] args)
         {
-            var app = new Class1();
+            //var app = new Class1();
             var host = PromptHost();
             var credentials = LogIn(host);
-            var output = ListRemote("/",true,credentials,host);
+            var fluentSession = new FluentFTP.FtpClient(host);
+            fluentSession.Credentials = credentials;
+            System.Console.WriteLine("Date\tTime\t< DIR > or Bytes Name");
+            foreach(var file in fluentSession.GetListing())
+            {
+                System.Console.WriteLine("{0}\t{1}\t{2}", 
+                    file.Name,
+                    file.Created.ToString(),
+                    file.Type == FluentFTP.FtpFileSystemObjectType.File ? file.Size.ToString() : "< DIR >");
+            }
             System.Console.Write("Press return to continue...");
             System.Console.ReadLine();
         }
