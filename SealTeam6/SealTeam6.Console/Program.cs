@@ -27,7 +27,7 @@ namespace SealTeam6.Console
                         break;
                     }
                 }
-                System.Console.Write("Invalid host. (Valid characters: letters, numbers and periods)\n");
+                System.Console.WriteLine("Invalid host. (Valid characters: letters, numbers and periods)");
                 System.Console.Write("Host: ");
                 host = System.Console.ReadLine();
             }
@@ -47,7 +47,8 @@ namespace SealTeam6.Console
                 System.Console.Write("*");
                 key = System.Console.ReadKey(true).KeyChar;
             }
-            System.Console.Write("\n");
+            System.Console.Clear();
+            System.Console.WriteLine();
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://" + host + "/");
             request.Method = WebRequestMethods.Ftp.ListDirectory;
             var credentials = new NetworkCredential(username, password);
@@ -59,6 +60,7 @@ namespace SealTeam6.Console
             }
             catch (WebException e)
             {
+                System.Console.WriteLine();
                 System.Console.Write(e.Message);
             }
             return credentials;
