@@ -9,11 +9,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealTeam6.Test.Core", "Seal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealTeam6.WinForms", "SealTeam6.WinForms\SealTeam6.WinForms.csproj", "{4B6FDD20-7722-4A52-B977-9578E012C77D}"
 EndProject
+<<<<<<< HEAD
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealTeam6.DataProvider", "SealTeam6.DataProvider\SealTeam6.DataProvider.csproj", "{1FAE0215-956B-4203-97A9-7DED93239C1A}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SealTeam6.SetupWizard", "SealTeam6.SetupWizard\SealTeam6.SetupWizard.vdproj", "{6DB0F550-F6E5-4F34-815E-9F9563F280AB}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SealTeam6.Setup", "SealTeam6.Setup\SealTeam6.Setup.vdproj", "{CA6F743D-0528-4794-8A0B-EC4DE92C24DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealTeam6.Test.DataProvider", "SealTeam6.Test.DataProvider\SealTeam6.Test.DataProvider.csproj", "{A0118D49-F3D4-4419-AEC5-89B7BD434B21}"
+=======
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealTeam6.EtoGUI", "SealTeam6.Eto\SealTeam6.EtoGUI.csproj", "{A2BD2248-1342-46E3-AF9E-218237195838}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealTeam6.EtoGUI.Desktop", "SealTeam6.Eto.Desktop\SealTeam6.EtoGUI.Desktop.csproj", "{A27AE490-D9BB-4C9F-99B5-4AEEFEE2EEBB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealTeam6.Console", "SealTeam6.Console\SealTeam6.Console.csproj", "{88E8D2BE-FBCC-4920-865E-E4AD96158AFD}"
+>>>>>>> master
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +43,20 @@ Global
 		{4B6FDD20-7722-4A52-B977-9578E012C77D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B6FDD20-7722-4A52-B977-9578E012C77D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B6FDD20-7722-4A52-B977-9578E012C77D}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< HEAD
+		{1FAE0215-956B-4203-97A9-7DED93239C1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FAE0215-956B-4203-97A9-7DED93239C1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FAE0215-956B-4203-97A9-7DED93239C1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FAE0215-956B-4203-97A9-7DED93239C1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DB0F550-F6E5-4F34-815E-9F9563F280AB}.Debug|Any CPU.ActiveCfg = Debug
+		{6DB0F550-F6E5-4F34-815E-9F9563F280AB}.Release|Any CPU.ActiveCfg = Release
+		{CA6F743D-0528-4794-8A0B-EC4DE92C24DE}.Debug|Any CPU.ActiveCfg = Debug
+		{CA6F743D-0528-4794-8A0B-EC4DE92C24DE}.Release|Any CPU.ActiveCfg = Release
+		{A0118D49-F3D4-4419-AEC5-89B7BD434B21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0118D49-F3D4-4419-AEC5-89B7BD434B21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0118D49-F3D4-4419-AEC5-89B7BD434B21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0118D49-F3D4-4419-AEC5-89B7BD434B21}.Release|Any CPU.Build.0 = Release|Any CPU
+=======
 		{A2BD2248-1342-46E3-AF9E-218237195838}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A2BD2248-1342-46E3-AF9E-218237195838}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2BD2248-1342-46E3-AF9E-218237195838}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +69,7 @@ Global
 		{88E8D2BE-FBCC-4920-865E-E4AD96158AFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88E8D2BE-FBCC-4920-865E-E4AD96158AFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88E8D2BE-FBCC-4920-865E-E4AD96158AFD}.Release|Any CPU.Build.0 = Release|Any CPU
+>>>>>>> master
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
