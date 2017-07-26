@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealTeam6.Core", "SealTeam6.Core\SealTeam6.Core.csproj", "{C8368F44-76F5-484E-8C90-D22D25C88D31}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealTeam6.EtoGUI", "SealTeam6.Eto\SealTeam6.EtoGUI.csproj", "{A2BD2248-1342-46E3-AF9E-218237195838}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealTeam6.EtoGUI.Desktop", "SealTeam6.Eto.Desktop\SealTeam6.EtoGUI.Desktop.csproj", "{A27AE490-D9BB-4C9F-99B5-4AEEFEE2EEBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealTeam6.Console", "SealTeam6.Console\SealTeam6.Console.csproj", "{88E8D2BE-FBCC-4920-865E-E4AD96158AFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{A27AE490-D9BB-4C9F-99B5-4AEEFEE2EEBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A27AE490-D9BB-4C9F-99B5-4AEEFEE2EEBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A27AE490-D9BB-4C9F-99B5-4AEEFEE2EEBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88E8D2BE-FBCC-4920-865E-E4AD96158AFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88E8D2BE-FBCC-4920-865E-E4AD96158AFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88E8D2BE-FBCC-4920-865E-E4AD96158AFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88E8D2BE-FBCC-4920-865E-E4AD96158AFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

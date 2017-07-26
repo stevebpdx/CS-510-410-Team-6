@@ -17,7 +17,8 @@ namespace SealTeam6.WinForms
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Class1.LogIn();
+            var app = new Class1();
+            app.LogIn();
             Application.Run(new Form1());
 
         }
