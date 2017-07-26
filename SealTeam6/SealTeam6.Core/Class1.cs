@@ -1,5 +1,6 @@
 ﻿﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -10,18 +11,23 @@ namespace SealTeam6.Core
 {
     public class Class1
     {
-        public static void LogIn()
+        private NetworkCredential credentials;
+        private String host;
+
+        public void LogIn()
         {
             Console.Write("Host: ");
-            String host = Console.ReadLine();
+            host = Console.ReadLine();
             Regex regex = new Regex("\\A([a-zA-Z0-9]|\\.){11,}\\z");
-            if (host == null)
+            while (true)
             {
-                Console.Write("Error: Host Null");
-                return;
-            }
-            while (!regex.IsMatch(host))
-            {
+                if (host != null)
+                {
+                    if (regex.IsMatch(host))
+                    {
+                        break;
+                    }
+                }
                 Console.Write("Invalid host. (Valid characters: letters, numbers and periods)\n");
                 Console.Write("Host: ");
                 host = Console.ReadLine();
@@ -40,10 +46,43 @@ namespace SealTeam6.Core
             Console.Write("\n");
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://" + host + "/");
             request.Method = WebRequestMethods.Ftp.ListDirectory;
-            request.Credentials = new NetworkCredential(username, password);
+            credentials = new NetworkCredential(username, password);
+            request.Credentials = credentials;
             try
             {
-                FtpWebResponse directoryListResponse = (FtpWebResponse)request.GetResponse();
+                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+                response.Close();
+            }
+            catch (WebException e)
+            {
+                Console.Write(e.Message);
+            }
+        }
+
+        public void ListRemote(String directory, bool verbose)
+        {
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://" + host + directory);
+            if (verbose)
+            {
+                request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
+            }
+            else
+            {
+                request.Method = WebRequestMethods.Ftp.ListDirectory;
+            }
+            request.Credentials = credentials;
+            try
+            {
+                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+                Stream stream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(stream);
+                if (verbose)
+                {
+                    Console.WriteLine("Date      Time          <DIR> or Bytes Name");
+                }
+                Console.WriteLine(reader.ReadToEnd());
+                reader.Close();
+                response.Close();
             }
             catch (WebException e)
             {
