@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SealTeam6.Core;
 
 namespace SealTeam6.WinForms
 {
@@ -16,7 +17,10 @@ namespace SealTeam6.WinForms
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            var app = new Class1();
+            //app.LogIn();
             Application.Run(new Form1());
+
         }
     }
 }
