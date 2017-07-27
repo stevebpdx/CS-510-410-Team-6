@@ -9,6 +9,7 @@ namespace SealTeam6.Test.Core
         [TestMethod]
         public void TestMethod1()
         {
+            Assert.Fail();
         }
     }
 }
