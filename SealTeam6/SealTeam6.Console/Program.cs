@@ -65,6 +65,24 @@ namespace SealTeam6.Console
             }
             return credentials;
         }
+        
+        
+        public static bool DeletesFile(FluentFTP.FtpClient fluentSession)
+		{
+
+			System.Console.WriteLine("Please provide name of file you would like to delete");
+			var file_name = System.Console.ReadLine();
+
+			if (!fluentSession.FileExists(file_name))
+			{
+
+				System.Console.WriteLine("Specified file was not deleted because file does not exist");
+				return false;
+			}
+
+			fluentSession.DeleteFile(file_name);
+			return true;
+		}
 
         static void Main(string[] args)
         {
