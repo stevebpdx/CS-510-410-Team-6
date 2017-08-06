@@ -64,6 +64,7 @@ namespace SealTeam6.Console
             String username = PromptString("Username", true);
             String password = PromptPassword();
             var session = Class1.LogIn(host, username, password);
+            Class1.LogOut(session);
             System.Console.ReadLine();
         }
     }

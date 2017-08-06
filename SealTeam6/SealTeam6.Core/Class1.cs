@@ -22,5 +22,14 @@ namespace SealTeam6.Core
             Console.WriteLine("Connection established.");
             return session;
         }
+
+        public static void LogOut(FluentFTP.FtpClient session)
+        {
+            if (session != null && session.IsConnected)
+            {
+                session.Disconnect();
+                Console.WriteLine("Connection terminated.");
+            }
+        }
     }
 }
