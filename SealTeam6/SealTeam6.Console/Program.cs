@@ -1,23 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SealTeam6.Core;
 using System.Text.RegularExpressions;
-using System.Net;
-using System.IO;
 
 namespace SealTeam6.Console
 {
     class Program
     {
-        public static string PromptHost()
+        public static String PromptHost()
         {
-
             System.Console.Write("Host: ");
-            var host = System.Console.ReadLine();
-            var regex = new Regex("\\A([a-zA-Z0-9]|\\.){11,}\\z");
+            String host = System.Console.ReadLine();
+            Regex regex = new Regex("\\A([a-zA-Z0-9]|\\.){11,}\\z");
             while (true)
             {
                 if (host != null)
@@ -34,10 +27,8 @@ namespace SealTeam6.Console
             return host;
         }
 
-        public static NetworkCredential LogIn(string host)
+        public static String PromptPassword()
         {
-            System.Console.Write("Username: ");
-            String username = System.Console.ReadLine();
             System.Console.Write("Password: ");
             String password = "";
             char key = System.Console.ReadKey(true).KeyChar;
@@ -47,41 +38,32 @@ namespace SealTeam6.Console
                 System.Console.Write("*");
                 key = System.Console.ReadKey(true).KeyChar;
             }
-            System.Console.Clear();
             System.Console.WriteLine();
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://" + host + "/");
-            request.Method = WebRequestMethods.Ftp.ListDirectory;
-            var credentials = new NetworkCredential(username, password);
-            request.Credentials = credentials;
-            try
+            return password;
+        }
+
+        public static String PromptString(String name, bool enforce)
+        {
+            System.Console.Write(name + ": ");
+            String response = System.Console.ReadLine();
+            if (enforce)
             {
-                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-                response.Close();
+                while (response == null || response == "")
+                {
+                    System.Console.WriteLine("Invalid response.");
+                    System.Console.Write(name + ": ");
+                    response = System.Console.ReadLine();
+                }
             }
-            catch (WebException e)
-            {
-                System.Console.WriteLine();
-                System.Console.Write(e.Message);
-            }
-            return credentials;
+            return response;
         }
 
         static void Main(string[] args)
         {
-            //var app = new Class1();
-            var host = PromptHost();
-            var credentials = LogIn(host);
-            var fluentSession = new FluentFTP.FtpClient(host);
-            fluentSession.Credentials = credentials;
-            System.Console.WriteLine("Date\tTime\t< DIR > or Bytes Name");
-            foreach(var file in fluentSession.GetListing())
-            {
-                System.Console.WriteLine("{0}\t{1}\t{2}", 
-                    file.Name,
-                    file.Created.ToString(),
-                    file.Type == FluentFTP.FtpFileSystemObjectType.File ? file.Size.ToString() : "< DIR >");
-            }
-            System.Console.Write("Press return to continue...");
+            String host = PromptHost();
+            String username = PromptString("Username", true);
+            String password = PromptPassword();
+            var session = Class1.LogIn(host, username, password);
             System.Console.ReadLine();
         }
     }
