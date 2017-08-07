@@ -131,18 +131,57 @@ namespace SealTeam6.Console
 
         static void Main(string[] args)
         {
-            String host = PromptHost();
-            String username = PromptString("Username", true);
-            String password = PromptPassword();
-            var session = Class1.LogIn(host, username, password);
-            String directory = PromptDirectory(session, true);
-            ListRemote(session, directory);
-            System.Console.WriteLine("Warning: If the local file already exists, then it will be overwritten.");
-            String local = PromptFile(session, false, "Local");
-            String remote = PromptFile(session, true, "Remote");
-            Class1.GetFile(session, local, remote);
-            Class1.LogOut(session);
-            System.Console.ReadLine();
+            System.Console.WriteLine("Welcome to Team Six's command line FTP client.");
+            System.Console.WriteLine("Contributors: Steve Braich, Devan Cakebread, Victor Ochia, Patrick Overton and");
+            System.Console.WriteLine("Barend Venter");
+            System.Console.WriteLine();
+            String choice = "";
+            FluentFTP.FtpClient session = null;
+            while (choice != "q")
+            {
+                while (session == null)
+                {
+                    String host = PromptHost();
+                    String username = PromptString("Username", true);
+                    String password = PromptPassword();
+                    session = Class1.LogIn(host, username, password);
+                }
+                System.Console.WriteLine();
+                System.Console.WriteLine("Local Operations:");
+                System.Console.WriteLine("Remote Operations:");
+                System.Console.WriteLine("1. Log Out");
+                System.Console.WriteLine("2. List the contents of a directory");
+                System.Console.WriteLine("3. Get File");
+                System.Console.WriteLine("Enter q to quit the program.");
+                choice = PromptString("Choice", true);
+                System.Console.WriteLine();
+                switch (choice)
+                {
+                    case "1":
+                        Class1.LogOut(session);
+                        session = null;
+                        break;
+                    case "2":
+                        String directory = PromptDirectory(session, true);
+                        ListRemote(session, directory);
+                        break;
+                    case "3":
+                        System.Console.WriteLine("Warning: If the local file already exists, then it will be overwritten.");
+                        String local = PromptFile(session, false, "Local");
+                        String remote = PromptFile(session, true, "Remote");
+                        Class1.GetFile(session, local, remote);
+                        break;
+                    case "q":
+                        break;
+                    default:
+                        System.Console.WriteLine("Invalid choice.");
+                        break;
+                }
+            }
+            if (session != null)
+            {
+                Class1.LogOut(session);
+            }
         }
     }
 }
