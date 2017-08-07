@@ -1,6 +1,7 @@
 ﻿using System;
 using SealTeam6.Core;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace SealTeam6.Console
 {
@@ -29,40 +30,60 @@ namespace SealTeam6.Console
 
         public static String PromptDirectory(FluentFTP.FtpClient session, bool enforce)
         {
-            System.Console.Write("Directory: ");
-            String directory = System.Console.ReadLine();
+            String directory = PromptHelper("Directory");
             if (enforce)
             {
                 while (directory == null || !session.DirectoryExists(directory))
                 {
                     System.Console.WriteLine("Invalid directory.");
-                    System.Console.Write("Directory: ");
-                    directory = System.Console.ReadLine();
+                    directory = PromptHelper("Directory");
                 }
             }
             return directory;
         }
 
-        public static String PromptFile(FluentFTP.FtpClient session, bool enforce)
+        public static String PromptFile(FluentFTP.FtpClient session, bool enforce, String system)
         {
-            System.Console.Write("File: ");
-            String file = System.Console.ReadLine();
+            String file = PromptHelper(system + " File");
             if (enforce)
             {
-                while (file == null || !session.FileExists(file))
+                if (system == "Local")
+                {
+                    while (file == null || !File.Exists(file))
+                    {
+                        System.Console.WriteLine("Invalid file.");
+                        file = PromptHelper(system + " File");
+                    }
+                }
+                else
+                {
+                    while (file == null || !session.FileExists(file))
+                    {
+                        System.Console.WriteLine("Invalid file.");
+                        file = PromptHelper(system + " File");
+                    }
+                }
+            }
+            else
+            {
+                while (file == null || file == "")
                 {
                     System.Console.WriteLine("Invalid file.");
-                    System.Console.Write("File: ");
-                    file = System.Console.ReadLine();
+                    file = PromptHelper(system + " File");
                 }
             }
             return file;
         }
 
+        private static String PromptHelper(String name)
+        {
+            System.Console.Write(name + ": ");
+            return System.Console.ReadLine();
+        }
+
         public static String PromptHost()
         {
-            System.Console.Write("Host: ");
-            String host = System.Console.ReadLine();
+            String host = PromptHelper("Host");
             Regex regex = new Regex("\\A([a-zA-Z0-9]|\\.){11,}\\z");
             while (true)
             {
@@ -74,8 +95,7 @@ namespace SealTeam6.Console
                     }
                 }
                 System.Console.WriteLine("Invalid host. (Valid characters: letters, numbers and periods)");
-                System.Console.Write("Host: ");
-                host = System.Console.ReadLine();
+                host = PromptHelper("Host");
             }
             return host;
         }
@@ -97,15 +117,13 @@ namespace SealTeam6.Console
 
         public static String PromptString(String name, bool enforce)
         {
-            System.Console.Write(name + ": ");
-            String response = System.Console.ReadLine();
+            String response = PromptHelper(name);
             if (enforce)
             {
                 while (response == null || response == "")
                 {
                     System.Console.WriteLine("Invalid response.");
-                    System.Console.Write(name + ": ");
-                    response = System.Console.ReadLine();
+                    response = PromptHelper(name);
                 }
             }
             return response;
@@ -119,6 +137,10 @@ namespace SealTeam6.Console
             var session = Class1.LogIn(host, username, password);
             String directory = PromptDirectory(session, true);
             ListRemote(session, directory);
+            System.Console.WriteLine("Warning: If the local file already exists, then it will be overwritten.");
+            String local = PromptFile(session, false, "Local");
+            String remote = PromptFile(session, true, "Remote");
+            Class1.GetFile(session, local, remote);
             Class1.LogOut(session);
             System.Console.ReadLine();
         }

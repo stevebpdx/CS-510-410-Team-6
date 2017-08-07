@@ -5,6 +5,18 @@ namespace SealTeam6.Core
 {
     public class Class1
     {
+        public static void GetFile(FluentFTP.FtpClient session, String local, String remote)
+        {
+            try
+            {
+                session.DownloadFile(local, remote);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+            }
+        }
+
         public static FluentFTP.FtpClient LogIn(String host, String username, String password)
         {
             NetworkCredential credentials = new NetworkCredential(username, password);
