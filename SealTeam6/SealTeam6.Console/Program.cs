@@ -7,6 +7,28 @@ namespace SealTeam6.Console
 {
     class Program
     {
+        public static void ListLocal(String directory)
+        {
+            String[] list = Directory.GetFileSystemEntries(directory);
+            System.Console.WriteLine("Date       Time     <DIR> or Bytes Name");
+            foreach (String item in list)
+            {
+                FileInfo info = new FileInfo(item);
+                System.Console.Write(info.LastWriteTime.GetDateTimeFormats()[56] + " ");
+                if ((info.Attributes & FileAttributes.Directory) == FileAttributes.Directory)
+                {
+                    System.Console.Write("<DIR>          ");
+                }
+                else
+                {
+                    String size = info.Length.ToString();
+                    String spaces = new String(' ', (14 - size.Length));
+                    System.Console.Write(spaces + size + " ");
+                }
+                System.Console.WriteLine(info.Name);
+            }
+        }
+
         public static void ListRemote(FluentFTP.FtpClient session, String directory)
         {
             FluentFTP.FtpListItem[] list = session.GetListing(directory);
@@ -28,15 +50,34 @@ namespace SealTeam6.Console
             }
         }
 
-        public static String PromptDirectory(FluentFTP.FtpClient session, bool enforce)
+        public static String PromptDirectory(FluentFTP.FtpClient session, bool enforce, String system)
         {
-            String directory = PromptHelper("Directory");
+            String directory = PromptHelper(system + " Directory");
             if (enforce)
             {
-                while (directory == null || !session.DirectoryExists(directory))
+                if (system == "Local")
+                {
+                    while (directory == null || !Directory.Exists(directory))
+                    {
+                        System.Console.WriteLine("Invalid directory.");
+                        directory = PromptHelper(system + " Directory");
+                    }
+                }
+                else
+                {
+                    while (directory == null || !session.DirectoryExists(directory))
+                    {
+                        System.Console.WriteLine("Invalid directory.");
+                        directory = PromptHelper(system + " Directory");
+                    }
+                }
+            }
+            else
+            {
+                while (directory == null || directory == "")
                 {
                     System.Console.WriteLine("Invalid directory.");
-                    directory = PromptHelper("Directory");
+                    directory = PromptHelper(system + " Directory");
                 }
             }
             return directory;
@@ -148,24 +189,29 @@ namespace SealTeam6.Console
                 }
                 System.Console.WriteLine();
                 System.Console.WriteLine("Local Operations:");
+                System.Console.WriteLine("1. List the contents of a directory");
                 System.Console.WriteLine("Remote Operations:");
-                System.Console.WriteLine("1. Log Out");
-                System.Console.WriteLine("2. List the contents of a directory");
-                System.Console.WriteLine("3. Get File");
+                System.Console.WriteLine("2. Log Out");
+                System.Console.WriteLine("3. List the contents of a directory");
+                System.Console.WriteLine("4. Get File");
                 System.Console.WriteLine("Enter q to quit the program.");
                 choice = PromptString("Choice", true);
                 System.Console.WriteLine();
                 switch (choice)
                 {
                     case "1":
+                        String directory = PromptDirectory(session, true, "Local");
+                        ListLocal(directory);
+                        break;
+                    case "2":
                         Class1.LogOut(session);
                         session = null;
                         break;
-                    case "2":
-                        String directory = PromptDirectory(session, true);
+                    case "3":
+                        directory = PromptDirectory(session, true, "Remote");
                         ListRemote(session, directory);
                         break;
-                    case "3":
+                    case "4":
                         System.Console.WriteLine("Warning: If the local file already exists, then it will be overwritten.");
                         String local = PromptFile(session, false, "Local");
                         String remote = PromptFile(session, true, "Remote");
