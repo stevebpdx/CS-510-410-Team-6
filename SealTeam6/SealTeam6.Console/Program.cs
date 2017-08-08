@@ -190,10 +190,11 @@ namespace SealTeam6.Console
                 System.Console.WriteLine();
                 System.Console.WriteLine("Local Operations:");
                 System.Console.WriteLine("1. List the contents of a directory");
+                System.Console.WriteLine("2. Rename File");
                 System.Console.WriteLine("Remote Operations:");
-                System.Console.WriteLine("2. Log Out");
-                System.Console.WriteLine("3. List the contents of a directory");
-                System.Console.WriteLine("4. Get File");
+                System.Console.WriteLine("3. Log Out");
+                System.Console.WriteLine("4. List the contents of a directory");
+                System.Console.WriteLine("5. Get File");
                 System.Console.WriteLine("Enter q to quit the program.");
                 choice = PromptString("Choice", true);
                 System.Console.WriteLine();
@@ -204,14 +205,20 @@ namespace SealTeam6.Console
                         ListLocal(directory);
                         break;
                     case "2":
+                        System.Console.WriteLine("Note: This operation cannot be used to move files.");
+                        String file = PromptFile(session, true, "Local");
+                        String new_name = PromptString("New Name", true);
+                        Class1.RenameLocal(file, new_name);
+                        break;
+                    case "3":
                         Class1.LogOut(session);
                         session = null;
                         break;
-                    case "3":
+                    case "4":
                         directory = PromptDirectory(session, true, "Remote");
                         ListRemote(session, directory);
                         break;
-                    case "4":
+                    case "5":
                         System.Console.WriteLine("Warning: If the local file already exists, then it will be overwritten.");
                         String local = PromptFile(session, false, "Local");
                         String remote = PromptFile(session, true, "Remote");

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 
 namespace SealTeam6.Core
@@ -41,6 +42,20 @@ namespace SealTeam6.Core
             {
                 session.Disconnect();
                 Console.WriteLine("Connection terminated.");
+            }
+        }
+
+        public static void RenameLocal(String file, String new_name)
+        {
+            try
+            {
+                FileInfo file_info = new FileInfo(file);
+                FileInfo new_info = new FileInfo(new_name);
+                File.Move(file, (file_info.Directory.FullName + "\\" + new_info.Name));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
             }
         }
     }
