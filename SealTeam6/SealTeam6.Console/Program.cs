@@ -2,11 +2,38 @@
 using SealTeam6.Core;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Collections.Generic;
 
 namespace SealTeam6.Console
 {
     class Program
     {
+        public static void GetFiles(FluentFTP.FtpClient session)
+        {
+            System.Console.WriteLine("Warning: If the local file already exists, then it will be overwritten.");
+            int count = PromptInt("File Count");
+            if (count == 1)
+            {
+                String local = PromptFile(session, false, "Local");
+                String remote = PromptFile(session, true, "Remote");
+                Class1.GetFile(session, local, remote);
+            }
+            else if (count > 1)
+            {
+                String directory = PromptDirectory(session, true, "Local");
+                List<String> files = new List<String>();
+                for (int i = 0; i < count; ++i)
+                {
+                    files.Add(PromptFile(session, true, "Remote"));
+                }
+                Class1.GetFiles(session, directory, files);
+            }
+            else
+            {
+                System.Console.WriteLine("Invalid count.");
+            }
+        }
+
         public static void ListLocal(String directory)
         {
             String[] list = Directory.GetFileSystemEntries(directory);
@@ -141,6 +168,18 @@ namespace SealTeam6.Console
             return host;
         }
 
+        public static int PromptInt(String name)
+        {
+            String response = PromptHelper(name);
+            int result;
+            while (!Int32.TryParse(response, out result))
+            {
+                System.Console.WriteLine("Invalid integer.");
+                response = PromptHelper(name);
+            }
+            return result;
+        }
+
         public static String PromptPassword()
         {
             System.Console.Write("Password: ");
@@ -194,7 +233,7 @@ namespace SealTeam6.Console
                 System.Console.WriteLine("Remote Operations:");
                 System.Console.WriteLine("3. Log Out");
                 System.Console.WriteLine("4. List the contents of a directory");
-                System.Console.WriteLine("5. Get File");
+                System.Console.WriteLine("5. Get File(s)");
                 System.Console.WriteLine("Enter q to quit the program.");
                 choice = PromptString("Choice", true);
                 System.Console.WriteLine();
@@ -219,10 +258,7 @@ namespace SealTeam6.Console
                         ListRemote(session, directory);
                         break;
                     case "5":
-                        System.Console.WriteLine("Warning: If the local file already exists, then it will be overwritten.");
-                        String local = PromptFile(session, false, "Local");
-                        String remote = PromptFile(session, true, "Remote");
-                        Class1.GetFile(session, local, remote);
+                        GetFiles(session);
                         break;
                     case "q":
                         break;

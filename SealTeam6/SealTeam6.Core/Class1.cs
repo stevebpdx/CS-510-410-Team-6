@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 
@@ -11,6 +12,18 @@ namespace SealTeam6.Core
             try
             {
                 session.DownloadFile(local, remote);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+            }
+        }
+
+        public static void GetFiles(FluentFTP.FtpClient session, String directory, List<String> files)
+        {
+            try
+            {
+                session.DownloadFiles(directory, files);
             }
             catch (Exception e)
             {
