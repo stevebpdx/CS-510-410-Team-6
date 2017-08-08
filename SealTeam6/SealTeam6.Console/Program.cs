@@ -1,23 +1,158 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SealTeam6.Core;
 using System.Text.RegularExpressions;
-using System.Net;
 using System.IO;
+using System.Collections.Generic;
 
 namespace SealTeam6.Console
 {
     class Program
     {
-        public static string PromptHost()
+        public static void GetFiles(FluentFTP.FtpClient session)
         {
+            System.Console.WriteLine("Warning: If the local file already exists, then it will be overwritten.");
+            int count = PromptInt("File Count");
+            if (count == 1)
+            {
+                String local = PromptFile(session, false, "Local");
+                String remote = PromptFile(session, true, "Remote");
+                Class1.GetFile(session, local, remote);
+            }
+            else if (count > 1)
+            {
+                String directory = PromptDirectory(session, true, "Local");
+                List<String> files = new List<String>();
+                for (int i = 0; i < count; ++i)
+                {
+                    files.Add(PromptFile(session, true, "Remote"));
+                }
+                Class1.GetFiles(session, directory, files);
+            }
+            else
+            {
+                System.Console.WriteLine("Invalid count.");
+            }
+        }
 
-            System.Console.Write("Host: ");
-            var host = System.Console.ReadLine();
-            var regex = new Regex("\\A([a-zA-Z0-9]|\\.){11,}\\z");
+        public static void ListLocal(String directory)
+        {
+            String[] list = Directory.GetFileSystemEntries(directory);
+            System.Console.WriteLine("Date       Time     <DIR> or Bytes Name");
+            foreach (String item in list)
+            {
+                FileInfo info = new FileInfo(item);
+                System.Console.Write(info.LastWriteTime.GetDateTimeFormats()[56] + " ");
+                if ((info.Attributes & FileAttributes.Directory) == FileAttributes.Directory)
+                {
+                    System.Console.Write("<DIR>          ");
+                }
+                else
+                {
+                    String size = info.Length.ToString();
+                    String spaces = new String(' ', (14 - size.Length));
+                    System.Console.Write(spaces + size + " ");
+                }
+                System.Console.WriteLine(info.Name);
+            }
+        }
+
+        public static void ListRemote(FluentFTP.FtpClient session, String directory)
+        {
+            FluentFTP.FtpListItem[] list = session.GetListing(directory);
+            System.Console.WriteLine("Date       Time     <DIR> or Bytes Name");
+            foreach (var item in list)
+            {
+                System.Console.Write(item.Modified.GetDateTimeFormats()[56] + " ");
+                if (item.Type == FluentFTP.FtpFileSystemObjectType.Directory)
+                {
+                    System.Console.Write("<DIR>          ");
+                }
+                else
+                {
+                    String size = item.Size.ToString();
+                    String spaces = new String(' ', (14 - size.Length));
+                    System.Console.Write(spaces + size + " ");
+                }
+                System.Console.WriteLine(item.Name);
+            }
+        }
+
+        public static String PromptDirectory(FluentFTP.FtpClient session, bool enforce, String system)
+        {
+            String directory = PromptHelper(system + " Directory");
+            if (enforce)
+            {
+                if (system == "Local")
+                {
+                    while (directory == null || !Directory.Exists(directory))
+                    {
+                        System.Console.WriteLine("Invalid directory.");
+                        directory = PromptHelper(system + " Directory");
+                    }
+                }
+                else
+                {
+                    while (directory == null || !session.DirectoryExists(directory))
+                    {
+                        System.Console.WriteLine("Invalid directory.");
+                        directory = PromptHelper(system + " Directory");
+                    }
+                }
+            }
+            else
+            {
+                while (directory == null || directory == "")
+                {
+                    System.Console.WriteLine("Invalid directory.");
+                    directory = PromptHelper(system + " Directory");
+                }
+            }
+            return directory;
+        }
+
+        public static String PromptFile(FluentFTP.FtpClient session, bool enforce, String system)
+        {
+            String file = PromptHelper(system + " File");
+            if (enforce)
+            {
+                if (system == "Local")
+                {
+                    while (file == null || !File.Exists(file))
+                    {
+                        System.Console.WriteLine("Invalid file.");
+                        file = PromptHelper(system + " File");
+                    }
+                }
+                else
+                {
+                    while (file == null || !session.FileExists(file))
+                    {
+                        System.Console.WriteLine("Invalid file.");
+                        file = PromptHelper(system + " File");
+                    }
+                }
+            }
+            else
+            {
+                while (file == null || file == "")
+                {
+                    System.Console.WriteLine("Invalid file.");
+                    file = PromptHelper(system + " File");
+                }
+            }
+            return file;
+        }
+
+        private static String PromptHelper(String name)
+        {
+            System.Console.Write(name + ": ");
+            return System.Console.ReadLine();
+        }
+
+        public static String PromptHost()
+        {
+            String host = PromptHelper("Host");
+            Regex regex = new Regex("\\A([a-zA-Z0-9]|\\.){11,}\\z");
             while (true)
             {
                 if (host != null)
@@ -28,16 +163,25 @@ namespace SealTeam6.Console
                     }
                 }
                 System.Console.WriteLine("Invalid host. (Valid characters: letters, numbers and periods)");
-                System.Console.Write("Host: ");
-                host = System.Console.ReadLine();
+                host = PromptHelper("Host");
             }
             return host;
         }
 
-        public static NetworkCredential LogIn(string host)
+        public static int PromptInt(String name)
         {
-            System.Console.Write("Username: ");
-            String username = System.Console.ReadLine();
+            String response = PromptHelper(name);
+            int result;
+            while (!Int32.TryParse(response, out result))
+            {
+                System.Console.WriteLine("Invalid integer.");
+                response = PromptHelper(name);
+            }
+            return result;
+        }
+
+        public static String PromptPassword()
+        {
             System.Console.Write("Password: ");
             String password = "";
             char key = System.Console.ReadKey(true).KeyChar;
@@ -47,42 +191,86 @@ namespace SealTeam6.Console
                 System.Console.Write("*");
                 key = System.Console.ReadKey(true).KeyChar;
             }
-            System.Console.Clear();
             System.Console.WriteLine();
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://" + host + "/");
-            request.Method = WebRequestMethods.Ftp.ListDirectory;
-            var credentials = new NetworkCredential(username, password);
-            request.Credentials = credentials;
-            try
+            return password;
+        }
+
+        public static String PromptString(String name, bool enforce)
+        {
+            String response = PromptHelper(name);
+            if (enforce)
             {
-                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-                response.Close();
+                while (response == null || response == "")
+                {
+                    System.Console.WriteLine("Invalid response.");
+                    response = PromptHelper(name);
+                }
             }
-            catch (WebException e)
-            {
-                System.Console.WriteLine();
-                System.Console.Write(e.Message);
-            }
-            return credentials;
+            return response;
         }
 
         static void Main(string[] args)
         {
-            //var app = new Class1();
-            var host = PromptHost();
-            var credentials = LogIn(host);
-            var fluentSession = new FluentFTP.FtpClient(host);
-            fluentSession.Credentials = credentials;
-            System.Console.WriteLine("Date\tTime\t< DIR > or Bytes Name");
-            foreach(var file in fluentSession.GetListing())
+            System.Console.WriteLine("Welcome to Team Six's command line FTP client.");
+            System.Console.WriteLine("Contributors: Steve Braich, Devan Cakebread, Victor Ochia, Patrick Overton and");
+            System.Console.WriteLine("Barend Venter");
+            System.Console.WriteLine();
+            String choice = "";
+            FluentFTP.FtpClient session = null;
+            while (choice != "q")
             {
-                System.Console.WriteLine("{0}\t{1}\t{2}", 
-                    file.Name,
-                    file.Created.ToString(),
-                    file.Type == FluentFTP.FtpFileSystemObjectType.File ? file.Size.ToString() : "< DIR >");
+                while (session == null)
+                {
+                    String host = PromptHost();
+                    String username = PromptString("Username", true);
+                    String password = PromptPassword();
+                    session = Class1.LogIn(host, username, password);
+                }
+                System.Console.WriteLine();
+                System.Console.WriteLine("Local Operations:");
+                System.Console.WriteLine("1. List the contents of a directory");
+                System.Console.WriteLine("2. Rename File");
+                System.Console.WriteLine("Remote Operations:");
+                System.Console.WriteLine("3. Log Out");
+                System.Console.WriteLine("4. List the contents of a directory");
+                System.Console.WriteLine("5. Get File(s)");
+                System.Console.WriteLine("Enter q to quit the program.");
+                choice = PromptString("Choice", true);
+                System.Console.WriteLine();
+                switch (choice)
+                {
+                    case "1":
+                        String directory = PromptDirectory(session, true, "Local");
+                        ListLocal(directory);
+                        break;
+                    case "2":
+                        System.Console.WriteLine("Note: This operation cannot be used to move files.");
+                        String file = PromptFile(session, true, "Local");
+                        String new_name = PromptString("New Name", true);
+                        Class1.RenameLocal(file, new_name);
+                        break;
+                    case "3":
+                        Class1.LogOut(session);
+                        session = null;
+                        break;
+                    case "4":
+                        directory = PromptDirectory(session, true, "Remote");
+                        ListRemote(session, directory);
+                        break;
+                    case "5":
+                        GetFiles(session);
+                        break;
+                    case "q":
+                        break;
+                    default:
+                        System.Console.WriteLine("Invalid choice.");
+                        break;
+                }
             }
-            System.Console.Write("Press return to continue...");
-            System.Console.ReadLine();
+            if (session != null)
+            {
+                Class1.LogOut(session);
+            }
         }
     }
 }
