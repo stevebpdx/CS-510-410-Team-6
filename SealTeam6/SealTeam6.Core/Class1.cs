@@ -71,5 +71,17 @@ namespace SealTeam6.Core
                 Console.WriteLine("Exception: " + e.Message);
             }
         }
+
+        public static void RenameRemote(FluentFTP.FtpClient session, String file, String new_name)
+        {
+            try
+            {
+                session.Rename(file, new_name);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+            }
+        }
     }
 }
