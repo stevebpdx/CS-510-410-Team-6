@@ -14,7 +14,7 @@ namespace SealTeam6.EtoGUI
         public MainForm(Action<Action> caller): base()
         {
             this.Title = "SampleFileBrowser";
-            this.Content = fileList.View;
+            this.Content = new ServerLoginForm().View; //fileList.View;
             OnGuiThread = caller;
         }
     }

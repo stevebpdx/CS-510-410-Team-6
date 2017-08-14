@@ -216,6 +216,12 @@ namespace SealTeam6.Console
             System.Console.WriteLine("Barend Venter");
             System.Console.WriteLine();
             String choice = "";
+
+            //Allocate registers for tracking user input with the state machine
+            String directory;
+            String file;
+            String new_name;
+
             FluentFTP.FtpClient session = null;
             while (choice != "q")
             {
@@ -234,19 +240,20 @@ namespace SealTeam6.Console
                 System.Console.WriteLine("3. Log Out");
                 System.Console.WriteLine("4. List the contents of a directory");
                 System.Console.WriteLine("5. Get File(s)");
+                System.Console.WriteLine("6. Rename a File");
                 System.Console.WriteLine("Enter q to quit the program.");
                 choice = PromptString("Choice", true);
                 System.Console.WriteLine();
                 switch (choice)
                 {
                     case "1":
-                        String directory = PromptDirectory(session, true, "Local");
+                        directory = PromptDirectory(session, true, "Local");
                         ListLocal(directory);
                         break;
                     case "2":
                         System.Console.WriteLine("Note: This operation cannot be used to move files.");
-                        String file = PromptFile(session, true, "Local");
-                        String new_name = PromptString("New Name", true);
+                        file = PromptFile(session, true, "Local");
+                        new_name = PromptString("New Name", true);
                         Class1.RenameLocal(file, new_name);
                         break;
                     case "3":
@@ -259,6 +266,11 @@ namespace SealTeam6.Console
                         break;
                     case "5":
                         GetFiles(session);
+                        break;
+                    case "6":
+                        file = PromptFile(session, true, "Remote");
+                        new_name = PromptString("New Name", true);
+                        Class1.RenameRemote(session, file, new_name);
                         break;
                     case "q":
                         break;
