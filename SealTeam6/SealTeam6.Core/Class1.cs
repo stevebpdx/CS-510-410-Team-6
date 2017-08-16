@@ -42,6 +42,7 @@ namespace SealTeam6.Core
             }
             catch (Exception e)
             {
+                
                 Console.WriteLine("Exception: " + e.Message);
                 return null;
             }
@@ -61,7 +62,8 @@ namespace SealTeam6.Core
 		{
             try 
             {
-                session.SetFilePermissions(file, to_set);
+                FileInfo file_info = new FileInfo(file);
+                session.SetFilePermissions(file_info.Directory.FullName + "\\" + file, to_set);
 
             }
             catch (Exception e)
