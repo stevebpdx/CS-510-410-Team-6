@@ -56,6 +56,12 @@ namespace SealTeam6.Core.Tests
         [TestMethod()]
         public void GetFilesTest()
         {
+            // Steve Braich, 16 Aug 2017
+            // The following code is just using the brute force method of creating 3 test files 
+            // uploading them to the FTP server, deleting them from local, downloading them, 
+            // then testing that they successfully downloaded.
+            // It's ugly and this particular test is my full responsibility.
+
             string localdir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             string localpath1 = AppDomain.CurrentDomain.SetupInformation.ApplicationBase + @"\test1.txt";
             string localpath2 = AppDomain.CurrentDomain.SetupInformation.ApplicationBase + @"\test2.txt";
