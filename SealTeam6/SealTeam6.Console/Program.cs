@@ -16,7 +16,7 @@ namespace SealTeam6.Console
             {
                 String local = PromptFile(session, false, "Local");
                 String remote = PromptFile(session, true, "Remote");
-                Class1.GetFile(session, local, remote);
+                SealTeam6FTP.GetFile(session, local, remote);
             }
             else if (count > 1)
             {
@@ -26,7 +26,7 @@ namespace SealTeam6.Console
                 {
                     files.Add(PromptFile(session, true, "Remote"));
                 }
-                Class1.GetFiles(session, directory, files);
+                SealTeam6FTP.GetFiles(session, directory, files);
             }
             else
             {
@@ -230,7 +230,7 @@ namespace SealTeam6.Console
                     String host = PromptHost();
                     String username = PromptString("Username", true);
                     String password = PromptPassword();
-                    session = Class1.LogIn(host, username, password);
+                    session = SealTeam6FTP.LogIn(host, username, password);
                 }
                 System.Console.WriteLine();
                 System.Console.WriteLine("Local Operations:");
@@ -256,10 +256,10 @@ namespace SealTeam6.Console
                         System.Console.WriteLine("Note: This operation cannot be used to move files.");
                         file = PromptFile(session, true, "Local");
                         new_name = PromptString("New Name", true);
-                        Class1.RenameLocal(file, new_name);
+                        SealTeam6FTP.RenameLocal(file, new_name);
                         break;
                     case "3":
-                        Class1.LogOut(session);
+                        SealTeam6FTP.LogOut(session);
                         session = null;
                         break;
                     case "4":
@@ -272,16 +272,16 @@ namespace SealTeam6.Console
                     case "6":
                         file = PromptFile(session, true, "Remote");
                         new_name = PromptString("New Name", true);
-                        Class1.RenameRemote(session, file, new_name);
+                        SealTeam6FTP.RenameRemote(session, file, new_name);
                         break;
                     case "7":
                         file = PromptFile(session, true, "Remote");
                         int to_Set = PromptInt("Permissions to set (ex. 777):");
-                        Class1.ChangePerms(session, file, to_Set);
+                        SealTeam6FTP.ChangePerms(session, file, to_Set);
                         break;
                     case "8":
                         directory = PromptString("Path to create:", true);
-                        Class1.CreateDir(session, directory);
+                        SealTeam6FTP.CreateDir(session, directory);
                         break;
                     case "q":
                         break;
@@ -292,7 +292,7 @@ namespace SealTeam6.Console
             }
             if (session != null)
             {
-                Class1.LogOut(session);
+                SealTeam6FTP.LogOut(session);
             }
         }
     }

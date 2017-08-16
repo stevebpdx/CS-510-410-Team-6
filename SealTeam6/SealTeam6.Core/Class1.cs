@@ -5,8 +5,25 @@ using System.Net;
 
 namespace SealTeam6.Core
 {
-    public class Class1
+    public class SealTeam6FTP
     {
+        public static void PromptResume(Action resumption, string message = "Try again?")
+        {
+            System.Console.Write(message);
+            System.Console.Write(" (y/n): ");
+            var userResponse = System.Console.ReadLine();
+            if (userResponse.ToLower() != "y")
+            {
+                if (userResponse.ToLower() == "n") return;
+                else
+                {
+                    System.Console.WriteLine("Please enter y or n");
+                    PromptResume(resumption, message);
+                }
+            }
+            else resumption();
+        }
+
         public static void GetFile(FluentFTP.FtpClient session, String local, String remote)
         {
             try
@@ -24,11 +41,17 @@ namespace SealTeam6.Core
             try
             {
                 session.DownloadFiles(directory, files);
+                return;
             }
-            catch (Exception e)
+            catch (FluentFTP.FtpCommandException e)
             {
-                Console.WriteLine("Exception: " + e.Message);
+                Console.WriteLine("Could not download files: " + e.Message);
             }
+            catch (System.IO.IOException e)
+            {
+                Console.WriteLine("Could not write downloaded files to disk: " + e.Message);
+            }
+            PromptResume(() => GetFiles(session, directory, files));
         }
 
         public static FluentFTP.FtpClient LogIn(String host, String username, String password)
@@ -40,10 +63,10 @@ namespace SealTeam6.Core
             {
                 session.Connect();
             }
-            catch (Exception e)
+            catch (FluentFTP.FtpCommandException e)
             {
                 
-                Console.WriteLine("Exception: " + e.Message);
+                Console.WriteLine("Failed to log in: " + e.Message);
                 return null;
             }
             Console.WriteLine("Connection established.");
@@ -64,22 +87,23 @@ namespace SealTeam6.Core
             {
                 FileInfo file_info = new FileInfo(file);
                 session.SetFilePermissions(file_info.Directory.FullName + "\\" + file, to_set);
-
+                return;
             }
-            catch (Exception e)
+            catch (FluentFTP.FtpCommandException e)
             {
-                Console.WriteLine("Exception: " + e.Message);
+                Console.WriteLine("CHMOD failed: " + e.Message);
             }
+            PromptResume(() => ChangePerms(session,file,to_set));
+        }
 
-		}
         public static void CreateDir(FluentFTP.FtpClient session, String to_create){
             try 
             {
                 session.CreateDirectory(to_create);
             }
-            catch (Exception e)
+            catch (System.IO.IOException e)
             {
-                Console.WriteLine("Exception: " + e.Message);
+                Console.WriteLine("Could not create directory: " + e.Message);
             }
         }
         public static void RenameLocal(String file, String new_name)
@@ -90,9 +114,9 @@ namespace SealTeam6.Core
                 FileInfo new_info = new FileInfo(new_name);
                 File.Move(file, (file_info.Directory.FullName + "\\" + new_info.Name));
             }
-            catch (Exception e)
+            catch (System.IO.IOException e)
             {
-                Console.WriteLine("Exception: " + e.Message);
+                Console.WriteLine("Rename Failed: " + e.Message);
             }
         }
 
@@ -102,9 +126,9 @@ namespace SealTeam6.Core
             {
                 session.Rename(file, new_name);
             }
-            catch (Exception e)
+            catch (FluentFTP.FtpCommandException e)
             {
-                Console.WriteLine("Exception: " + e.Message);
+                Console.WriteLine("Rename Failed: " + e.Message);
             }
         }
     }
