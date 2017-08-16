@@ -57,7 +57,29 @@ namespace SealTeam6.Core
                 Console.WriteLine("Connection terminated.");
             }
         }
+		public static void ChangePerms(FluentFTP.FtpClient session, String file, int to_set)
+		{
+            try 
+            {
+                session.SetFilePermissions(file, to_set);
 
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+            }
+
+		}
+        public static void CreateDir(FluentFTP.FtpClient session, String to_create){
+            try 
+            {
+                session.CreateDirectory(to_create);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+            }
+        }
         public static void RenameLocal(String file, String new_name)
         {
             try

@@ -241,6 +241,8 @@ namespace SealTeam6.Console
                 System.Console.WriteLine("4. List the contents of a directory");
                 System.Console.WriteLine("5. Get File(s)");
                 System.Console.WriteLine("6. Rename a File");
+                System.Console.WriteLine("7. Change Permissions on a File");
+                System.Console.WriteLine("8. Create Directory");
                 System.Console.WriteLine("Enter q to quit the program.");
                 choice = PromptString("Choice", true);
                 System.Console.WriteLine();
@@ -271,6 +273,15 @@ namespace SealTeam6.Console
                         file = PromptFile(session, true, "Remote");
                         new_name = PromptString("New Name", true);
                         Class1.RenameRemote(session, file, new_name);
+                        break;
+                    case "7":
+                        file = PromptFile(session, true, "Remote");
+                        int to_Set = PromptInt("Permissions to set (ex. 777):");
+                        Class1.ChangePerms(session, file, to_Set);
+                        break;
+                    case "8":
+                        directory = PromptString("Path to create:", true);
+                        Class1.CreateDir(session, directory);
                         break;
                     case "q":
                         break;
