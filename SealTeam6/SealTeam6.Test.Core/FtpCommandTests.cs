@@ -128,18 +128,5 @@ namespace SealTeam6.Core.Tests
             Core.Class1.RenameLocal(localpath, renamepath);
             Assert.IsTrue(File.Exists(renamepath));
         }
-
-        [TestMethod()]
-        public void GetLocalFileListingTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void GetRemoteFileListingTest()
-        {
-            Assert.Fail();
-        }
-
     }
 }
