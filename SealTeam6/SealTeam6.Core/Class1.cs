@@ -58,7 +58,7 @@ namespace SealTeam6.Core
                 Console.WriteLine("Connection terminated.");
             }
         }
-		public static void ChangePerms(FluentFTP.FtpClient session, String file, int to_set)
+        public static void ChangePerms(FluentFTP.FtpClient session, String file, int to_set)
 		{
             try 
             {
