@@ -31,6 +31,7 @@ namespace SealTeam6.DataProvider
                     result.Directory = connection.Directory;
 
                     db.SaveChanges();
+                    connection.ConnectionID = result.ConnectionID;
                 }
                 else
                 {

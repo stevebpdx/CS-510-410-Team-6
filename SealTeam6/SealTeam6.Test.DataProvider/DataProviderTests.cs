@@ -21,7 +21,6 @@ namespace SealTeam6.DataProvider.Tests
             c.Directory = "/test";
 
             DataProvider data = new DataProvider("dbContext");
-            //DataProvider data = new DataProvider();
             data.SaveOrUpdateConnection(c);
 
             Assert.IsNotNull(c.ConnectionID);
