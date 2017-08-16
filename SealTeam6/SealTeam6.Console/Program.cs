@@ -280,7 +280,7 @@ namespace SealTeam6.Console
                         SealTeam6FTP.ChangePerms(session, file, to_Set);
                         break;
                     case "8":
-                        directory = PromptString("Path to create:", true);
+                        directory = PromptDirectory(session, false, "Remote");
                         SealTeam6FTP.CreateDir(session, directory);
                         break;
                     case "q":
