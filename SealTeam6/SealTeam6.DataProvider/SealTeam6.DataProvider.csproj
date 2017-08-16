@@ -80,7 +80,6 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>ftpDbContext.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="App.Config" />
     <None Include="ftpDbContext.edmx.diagram">
       <DependentUpon>ftpDbContext.edmx</DependentUpon>
     </None>
