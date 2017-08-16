@@ -8,11 +8,6 @@ namespace SealTeam6.Console
 {
     class Program
     {
-        
-        
-      
-      
-        
         public static void GetFiles(FluentFTP.FtpClient session)
         {
             System.Console.WriteLine("Warning: If the local file already exists, then it will be overwritten.");
