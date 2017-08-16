@@ -108,7 +108,7 @@ namespace SealTeam6.Core
             {
                 session.CreateDirectory(to_create);
             }
-            catch (System.IO.IOException e)
+            catch (FluentFTP.FtpCommandException e)
             {
                 Console.WriteLine("Could not create directory: " + e.Message);
                 PromptResume(() => CreateDir(session, to_create));
