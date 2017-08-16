@@ -5,7 +5,7 @@ using System.Net;
 
 namespace SealTeam6.Core
 {
-    public class SealTeam6FTP
+    public static class SealTeam6FTP
     {
         public static void PromptResume(Action resumption, string message = "Try again?")
         {
@@ -30,9 +30,15 @@ namespace SealTeam6.Core
             {
                 session.DownloadFile(local, remote);
             }
-            catch (Exception e)
+            catch (FluentFTP.FtpCommandException e)
             {
                 Console.WriteLine("Exception: " + e.Message);
+                PromptResume(() => GetFile(session, local, remote));
+            }
+            catch (System.IO.IOException e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+                PromptResume(() => GetFile(session, local, remote));
             }
         }
 
@@ -46,12 +52,13 @@ namespace SealTeam6.Core
             catch (FluentFTP.FtpCommandException e)
             {
                 Console.WriteLine("Could not download files: " + e.Message);
+                PromptResume(() => GetFiles(session, directory, files));
             }
             catch (System.IO.IOException e)
             {
                 Console.WriteLine("Could not write downloaded files to disk: " + e.Message);
+                PromptResume(() => GetFiles(session, directory, files));
             }
-            PromptResume(() => GetFiles(session, directory, files));
         }
 
         public static FluentFTP.FtpClient LogIn(String host, String username, String password)
@@ -92,8 +99,8 @@ namespace SealTeam6.Core
             catch (FluentFTP.FtpCommandException e)
             {
                 Console.WriteLine("CHMOD failed: " + e.Message);
+                PromptResume(() => ChangePerms(session, file, to_set));
             }
-            PromptResume(() => ChangePerms(session,file,to_set));
         }
 
         public static void CreateDir(FluentFTP.FtpClient session, String to_create){
@@ -104,6 +111,7 @@ namespace SealTeam6.Core
             catch (System.IO.IOException e)
             {
                 Console.WriteLine("Could not create directory: " + e.Message);
+                PromptResume(() => CreateDir(session, to_create));
             }
         }
         public static void RenameLocal(String file, String new_name)
@@ -117,6 +125,7 @@ namespace SealTeam6.Core
             catch (System.IO.IOException e)
             {
                 Console.WriteLine("Rename Failed: " + e.Message);
+                PromptResume(() => RenameLocal(file, new_name));
             }
         }
 
@@ -129,6 +138,7 @@ namespace SealTeam6.Core
             catch (FluentFTP.FtpCommandException e)
             {
                 Console.WriteLine("Rename Failed: " + e.Message);
+                PromptResume(() => RenameRemote(session, file, new_name));
             }
         }
     }
