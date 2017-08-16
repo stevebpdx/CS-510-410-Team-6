@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using FluentFTP;
+using System.Text.RegularExpressions;
 
 namespace SealTeam6.Core
 {
@@ -24,13 +26,13 @@ namespace SealTeam6.Core
             else resumption();
         }
 
-        public static void GetFile(FluentFTP.FtpClient session, String local, String remote)
+        public static void GetFile(FtpClient session, String local, String remote)
         {
             try
             {
                 session.DownloadFile(local, remote);
             }
-            catch (FluentFTP.FtpCommandException e)
+            catch (FtpCommandException e)
             {
                 Console.WriteLine("Exception: " + e.Message);
                 PromptResume(() => GetFile(session, local, remote));
@@ -42,14 +44,14 @@ namespace SealTeam6.Core
             }
         }
 
-        public static void GetFiles(FluentFTP.FtpClient session, String directory, List<String> files)
+        public static void GetFiles(FtpClient session, String directory, List<String> files)
         {
             try
             {
                 session.DownloadFiles(directory, files);
                 return;
             }
-            catch (FluentFTP.FtpCommandException e)
+            catch (FtpCommandException e)
             {
                 Console.WriteLine("Could not download files: " + e.Message);
                 PromptResume(() => GetFiles(session, directory, files));
@@ -61,16 +63,16 @@ namespace SealTeam6.Core
             }
         }
 
-        public static FluentFTP.FtpClient LogIn(String host, String username, String password)
+        public static FtpClient LogIn(String host, String username, String password)
         {
             NetworkCredential credentials = new NetworkCredential(username, password);
-            var session = new FluentFTP.FtpClient(host);
+            var session = new FtpClient(host);
             session.Credentials = credentials;
             try
             {
                 session.Connect();
             }
-            catch (FluentFTP.FtpCommandException e)
+            catch (FtpCommandException e)
             {
                 
                 Console.WriteLine("Failed to log in: " + e.Message);
@@ -80,7 +82,7 @@ namespace SealTeam6.Core
             return session;
         }
 
-        public static void LogOut(FluentFTP.FtpClient session)
+        public static void LogOut(FtpClient session)
         {
             if (session != null && session.IsConnected)
             {
@@ -88,32 +90,52 @@ namespace SealTeam6.Core
                 Console.WriteLine("Connection terminated.");
             }
         }
-        public static void ChangePerms(FluentFTP.FtpClient session, String file, int to_set)
+
+        public static void ChangePerms(FtpClient session, String file, int to_set)
 		{
-            try 
+            try
             {
                 FileInfo file_info = new FileInfo(file);
                 session.SetFilePermissions(file_info.Directory.FullName + "\\" + file, to_set);
                 return;
             }
-            catch (FluentFTP.FtpCommandException e)
+            catch (FtpCommandException e)
             {
                 Console.WriteLine("CHMOD failed: " + e.Message);
                 PromptResume(() => ChangePerms(session, file, to_set));
             }
         }
 
-        public static void CreateDir(FluentFTP.FtpClient session, String to_create){
-            try 
+        public static void CreateDir(FtpClient session, String to_create)
+        {
+            try
             {
-                session.CreateDirectory(to_create);
+                // I had to add this regex because the CreateDirectory method chokes on directories located in the root.
+                Regex regex = new Regex("\\A/[^/]+\\z");
+                if (regex.IsMatch(to_create))
+                {
+                    FtpReply reply;
+                    if (session.DirectoryExists(to_create))
+                    {
+                        return;
+                    }
+                    else if (!(reply = session.Execute("MKD " + to_create)).Success)
+                    {
+                        throw new FtpCommandException(reply);
+                    }
+                }
+                else
+                {
+                    session.CreateDirectory(to_create);
+                }
             }
-            catch (FluentFTP.FtpCommandException e)
+            catch (FtpCommandException e)
             {
                 Console.WriteLine("Could not create directory: " + e.Message);
                 PromptResume(() => CreateDir(session, to_create));
             }
         }
+
         public static void RenameLocal(String file, String new_name)
         {
             try
@@ -129,13 +151,13 @@ namespace SealTeam6.Core
             }
         }
 
-        public static void RenameRemote(FluentFTP.FtpClient session, String file, String new_name)
+        public static void RenameRemote(FtpClient session, String file, String new_name)
         {
             try
             {
                 session.Rename(file, new_name);
             }
-            catch (FluentFTP.FtpCommandException e)
+            catch (FtpCommandException e)
             {
                 Console.WriteLine("Rename Failed: " + e.Message);
                 PromptResume(() => RenameRemote(session, file, new_name));

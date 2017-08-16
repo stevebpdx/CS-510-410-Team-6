@@ -3,12 +3,13 @@ using SealTeam6.Core;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Collections.Generic;
+using FluentFTP;
 
 namespace SealTeam6.Console
 {
     class Program
     {
-        public static void GetFiles(FluentFTP.FtpClient session)
+        public static void GetFiles(FtpClient session)
         {
             System.Console.WriteLine("Warning: If the local file already exists, then it will be overwritten.");
             int count = PromptInt("File Count");
@@ -56,14 +57,14 @@ namespace SealTeam6.Console
             }
         }
 
-        public static void ListRemote(FluentFTP.FtpClient session, String directory)
+        public static void ListRemote(FtpClient session, String directory)
         {
-            FluentFTP.FtpListItem[] list = session.GetListing(directory);
+            FtpListItem[] list = session.GetListing(directory);
             System.Console.WriteLine("Date       Time     <DIR> or Bytes Name");
             foreach (var item in list)
             {
                 System.Console.Write(item.Modified.GetDateTimeFormats()[56] + " ");
-                if (item.Type == FluentFTP.FtpFileSystemObjectType.Directory)
+                if (item.Type == FtpFileSystemObjectType.Directory)
                 {
                     System.Console.Write("<DIR>          ");
                 }
@@ -77,7 +78,7 @@ namespace SealTeam6.Console
             }
         }
 
-        public static String PromptDirectory(FluentFTP.FtpClient session, bool enforce, String system)
+        public static String PromptDirectory(FtpClient session, bool enforce, String system)
         {
             String directory = PromptHelper(system + " Directory");
             if (enforce)
@@ -110,7 +111,7 @@ namespace SealTeam6.Console
             return directory;
         }
 
-        public static String PromptFile(FluentFTP.FtpClient session, bool enforce, String system)
+        public static String PromptFile(FtpClient session, bool enforce, String system)
         {
             String file = PromptHelper(system + " File");
             if (enforce)
@@ -174,7 +175,7 @@ namespace SealTeam6.Console
             int result;
             while (!Int32.TryParse(response, out result))
             {
-                System.Console.WriteLine("Invalid integer.");
+                System.Console.WriteLine("Invalid response.");
                 response = PromptHelper(name);
             }
             return result;
@@ -222,7 +223,7 @@ namespace SealTeam6.Console
             String file;
             String new_name;
 
-            FluentFTP.FtpClient session = null;
+            FtpClient session = null;
             while (choice != "q")
             {
                 while (session == null)
@@ -276,11 +277,11 @@ namespace SealTeam6.Console
                         break;
                     case "7":
                         file = PromptFile(session, true, "Remote");
-                        int to_Set = PromptInt("Permissions to set (ex. 777):");
+                        int to_Set = PromptInt("Permissions to set (ex. 777)");
                         SealTeam6FTP.ChangePerms(session, file, to_Set);
                         break;
                     case "8":
-                        directory = PromptDirectory(session, false, "Remote");
+                        directory = PromptString("Path to create", true);
                         SealTeam6FTP.CreateDir(session, directory);
                         break;
                     case "q":
