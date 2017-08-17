@@ -3,12 +3,13 @@ using SealTeam6.Core;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Collections.Generic;
+using FluentFTP;
 
 namespace SealTeam6.Console
 {
     class Program
     {
-        public static void GetFiles(FluentFTP.FtpClient session)
+        public static void GetFiles(FtpClient session)
         {
             System.Console.WriteLine("Warning: If the local file already exists, then it will be overwritten.");
             int count = PromptInt("File Count");
@@ -16,7 +17,7 @@ namespace SealTeam6.Console
             {
                 String local = PromptFile(session, false, "Local");
                 String remote = PromptFile(session, true, "Remote");
-                Class1.GetFile(session, local, remote);
+                SealTeam6FTP.GetFile(session, local, remote);
             }
             else if (count > 1)
             {
@@ -26,7 +27,7 @@ namespace SealTeam6.Console
                 {
                     files.Add(PromptFile(session, true, "Remote"));
                 }
-                Class1.GetFiles(session, directory, files);
+                SealTeam6FTP.GetFiles(session, directory, files);
             }
             else
             {
@@ -56,14 +57,14 @@ namespace SealTeam6.Console
             }
         }
 
-        public static void ListRemote(FluentFTP.FtpClient session, String directory)
+        public static void ListRemote(FtpClient session, String directory)
         {
-            FluentFTP.FtpListItem[] list = session.GetListing(directory);
+            FtpListItem[] list = session.GetListing(directory);
             System.Console.WriteLine("Date       Time     <DIR> or Bytes Name");
             foreach (var item in list)
             {
                 System.Console.Write(item.Modified.GetDateTimeFormats()[56] + " ");
-                if (item.Type == FluentFTP.FtpFileSystemObjectType.Directory)
+                if (item.Type == FtpFileSystemObjectType.Directory)
                 {
                     System.Console.Write("<DIR>          ");
                 }
@@ -77,7 +78,7 @@ namespace SealTeam6.Console
             }
         }
 
-        public static String PromptDirectory(FluentFTP.FtpClient session, bool enforce, String system)
+        public static String PromptDirectory(FtpClient session, bool enforce, String system)
         {
             String directory = PromptHelper(system + " Directory");
             if (enforce)
@@ -110,7 +111,7 @@ namespace SealTeam6.Console
             return directory;
         }
 
-        public static String PromptFile(FluentFTP.FtpClient session, bool enforce, String system)
+        public static String PromptFile(FtpClient session, bool enforce, String system)
         {
             String file = PromptHelper(system + " File");
             if (enforce)
@@ -174,7 +175,7 @@ namespace SealTeam6.Console
             int result;
             while (!Int32.TryParse(response, out result))
             {
-                System.Console.WriteLine("Invalid integer.");
+                System.Console.WriteLine("Invalid response.");
                 response = PromptHelper(name);
             }
             return result;
@@ -222,7 +223,7 @@ namespace SealTeam6.Console
             String file;
             String new_name;
 
-            FluentFTP.FtpClient session = null;
+            FtpClient session = null;
             while (choice != "q")
             {
                 while (session == null)
@@ -230,7 +231,7 @@ namespace SealTeam6.Console
                     String host = PromptHost();
                     String username = PromptString("Username", true);
                     String password = PromptPassword();
-                    session = Class1.LogIn(host, username, password);
+                    session = SealTeam6FTP.LogIn(host, username, password);
                 }
                 System.Console.WriteLine();
                 System.Console.WriteLine("Local Operations:");
@@ -241,6 +242,8 @@ namespace SealTeam6.Console
                 System.Console.WriteLine("4. List the contents of a directory");
                 System.Console.WriteLine("5. Get File(s)");
                 System.Console.WriteLine("6. Rename a File");
+                System.Console.WriteLine("7. Change Permissions on a File");
+                System.Console.WriteLine("8. Create Directory");
                 System.Console.WriteLine("Enter q to quit the program.");
                 choice = PromptString("Choice", true);
                 System.Console.WriteLine();
@@ -254,10 +257,10 @@ namespace SealTeam6.Console
                         System.Console.WriteLine("Note: This operation cannot be used to move files.");
                         file = PromptFile(session, true, "Local");
                         new_name = PromptString("New Name", true);
-                        Class1.RenameLocal(file, new_name);
+                        SealTeam6FTP.RenameLocal(file, new_name);
                         break;
                     case "3":
-                        Class1.LogOut(session);
+                        SealTeam6FTP.LogOut(session);
                         session = null;
                         break;
                     case "4":
@@ -270,7 +273,16 @@ namespace SealTeam6.Console
                     case "6":
                         file = PromptFile(session, true, "Remote");
                         new_name = PromptString("New Name", true);
-                        Class1.RenameRemote(session, file, new_name);
+                        SealTeam6FTP.RenameRemote(session, file, new_name);
+                        break;
+                    case "7":
+                        file = PromptFile(session, true, "Remote");
+                        int to_Set = PromptInt("Permissions to set (ex. 777)");
+                        SealTeam6FTP.ChangePerms(session, file, to_Set);
+                        break;
+                    case "8":
+                        directory = PromptString("Path to create", true);
+                        SealTeam6FTP.CreateDir(session, directory);
                         break;
                     case "q":
                         break;
@@ -281,7 +293,7 @@ namespace SealTeam6.Console
             }
             if (session != null)
             {
-                Class1.LogOut(session);
+                SealTeam6FTP.LogOut(session);
             }
         }
     }
