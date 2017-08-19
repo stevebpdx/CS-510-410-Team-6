@@ -111,7 +111,7 @@ namespace SealTeam6.Core
             try
             {
                 // I had to add this regex because the CreateDirectory method chokes on directories located in the root.
-                Regex regex = new Regex("\\A/[^/]+\\z");
+                Regex regex = new Regex("\\A/[^/]+/??\\z");
                 if (regex.IsMatch(to_create))
                 {
                     FtpReply reply;
