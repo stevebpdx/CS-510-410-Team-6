@@ -183,6 +183,7 @@ namespace SealTeam6.Console
 
         public static String PromptPassword()
         {
+            System.Console.WriteLine("Note: Backspaces are appended to the password. We didn't find a fix for this.");
             System.Console.Write("Password: ");
             String password = "";
             char key = System.Console.ReadKey(true).KeyChar;
